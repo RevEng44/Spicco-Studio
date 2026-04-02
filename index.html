@@ -113,65 +113,54 @@ nav {
 }
 
 /* ===== ROLODEX STYLES ===== */
-.rolodex-section {
-  position: relative;
-}
-.rolodex-sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
+.rolodex-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  padding: 60px 0 80px;
 }
 .rolodex-scene {
   perspective: 1200px;
-  width: 100%;
-  max-width: 700px;
-  height: 500px;
-  margin: 0 auto;
+  width: 620px;
+  height: 440px;
+  position: relative;
 }
 .rolodex-wheel {
   width: 100%;
   height: 100%;
-  position: relative;
+  position: absolute;
   transform-style: preserve-3d;
 }
+/* Every card is the exact same size, absolutely positioned at center */
 .rolodex-card {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
+  width: 580px;
+  height: 400px;
+  left: 50%;
+  top: 50%;
+  margin-left: -290px;
+  margin-top: -200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: filter 0.6s ease, opacity 0.6s ease;
-}
-.rolodex-card.active {
-  filter: brightness(1) blur(0);
-  opacity: 1;
-}
-.rolodex-card:not(.active) {
-  filter: brightness(0.3) blur(3px);
-  opacity: 0.5;
+  cursor: pointer;
+  transition: filter 0.5s ease, opacity 0.5s ease;
 }
 
-/* Browser mockup frame */
+/* Browser mockup frame — fixed size for all cards */
 .browser-frame {
   background: #111;
-  border: 1px solid rgba(200, 146, 42, 0.2);
+  border: 1px solid rgba(200, 146, 42, 0.15);
   border-radius: 8px;
   overflow: hidden;
-  width: 100%;
-  max-width: 580px;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(200,146,42,0.05);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  width: 580px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  transition: box-shadow 0.4s ease;
+  flex-shrink: 0;
 }
-.rolodex-card.active .browser-frame:hover {
-  transform: translateZ(20px) translateY(-4px);
+.browser-frame:hover {
   box-shadow: 0 16px 60px rgba(200, 146, 42, 0.25), 0 0 30px rgba(200, 146, 42, 0.1);
 }
 .browser-chrome {
@@ -198,7 +187,8 @@ nav {
 }
 .browser-content {
   position: relative;
-  aspect-ratio: 16/10;
+  width: 580px;
+  height: 310px;
   overflow: hidden;
 }
 .browser-content img,
@@ -206,6 +196,7 @@ nav {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 .placeholder-screen {
   display: flex;
@@ -224,17 +215,17 @@ nav {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 40%;
+  height: 50%;
   background: linear-gradient(to top, rgba(13,10,8,0.9), transparent);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-bottom: 20px;
+  padding-bottom: 24px;
   opacity: 0;
   transition: opacity 0.4s ease;
   pointer-events: none;
 }
-.rolodex-card.active .browser-frame:hover .view-site-overlay {
+.browser-frame:hover .view-site-overlay {
   opacity: 1;
   pointer-events: auto;
 }
@@ -256,11 +247,12 @@ nav {
 
 .card-info {
   text-align: center;
-  margin-top: 16px;
+  margin-top: 14px;
+  flex-shrink: 0;
 }
 .card-info h4 {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #E9E1DC;
 }
@@ -274,37 +266,11 @@ nav {
   margin-top: 4px;
 }
 
-/* ===== MOBILE CARD STACK ===== */
-.mobile-card-stack {
-  display: none;
-}
-@media (max-width: 768px) {
-  .rolodex-sticky {
-    display: none !important;
-  }
-  .rolodex-section {
-    height: auto !important;
-  }
-  .mobile-card-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    padding: 0 1rem;
-  }
-  .mobile-card-stack .browser-frame {
-    max-width: 100%;
-  }
-  .mobile-card-stack .view-site-overlay {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-
-/* Progress dots for rolodex */
+/* Progress dots */
 .rolodex-dots {
   display: flex;
   gap: 10px;
-  margin-top: 28px;
+  margin-top: 24px;
 }
 .rolodex-dot {
   width: 8px;
@@ -312,10 +278,39 @@ nav {
   border-radius: 50%;
   background: rgba(200, 146, 42, 0.2);
   transition: all 0.4s ease;
+  cursor: pointer;
 }
 .rolodex-dot.active {
   background: #C8922A;
   box-shadow: 0 0 10px rgba(200, 146, 42, 0.5);
+}
+
+/* ===== MOBILE CARD STACK ===== */
+.mobile-card-stack {
+  display: none;
+}
+@media (max-width: 768px) {
+  .rolodex-wrapper {
+    display: none !important;
+  }
+  .mobile-card-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    padding: 0 1rem 3rem;
+  }
+  .mobile-card-stack .browser-frame {
+    width: 100%;
+  }
+  .mobile-card-stack .browser-content {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16/10;
+  }
+  .mobile-card-stack .view-site-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 /* Form select fix */
@@ -445,21 +440,19 @@ select option {
 </section>
 
 <!-- ========== PORTFOLIO / ROLODEX SECTION ========== -->
-<section class="rolodex-section bg-background" id="portfolio">
-  <!-- Section header (outside sticky so it scrolls naturally) -->
-  <div class="pt-32 pb-16 text-center px-8">
+<section class="py-32 bg-background" id="portfolio">
+  <div class="text-center px-8 mb-8">
     <span class="font-headline text-primary text-sm uppercase tracking-[0.2em] font-bold mb-4 block">The Forge</span>
     <h2 class="font-headline text-4xl md:text-6xl font-bold uppercase">Our Work</h2>
     <p class="text-on-surface-variant text-lg mt-6 max-w-xl mx-auto font-light">A few of the brands we've helped rise above the noise.</p>
   </div>
 
-  <!-- Desktop: Sticky Rolodex -->
-  <div class="rolodex-sticky" id="rolodexSticky">
+  <!-- Desktop: Auto-spinning 3D Rolodex -->
+  <div class="rolodex-wrapper" id="rolodexWrapper">
     <div class="rolodex-scene" id="rolodexScene">
       <div class="rolodex-wheel" id="rolodexWheel">
 
-        <!-- Card 0: The Baking Broker -->
-        <div class="rolodex-card active" data-index="0">
+        <div class="rolodex-card" data-index="0" data-url="https://thebakingbroker.ca">
           <div class="browser-frame">
             <div class="browser-chrome">
               <div class="browser-dot red"></div>
@@ -480,8 +473,7 @@ select option {
           </div>
         </div>
 
-        <!-- Card 1: Spirit Valley -->
-        <div class="rolodex-card" data-index="1">
+        <div class="rolodex-card" data-index="1" data-url="https://spiritvalley.ca">
           <div class="browser-frame">
             <div class="browser-chrome">
               <div class="browser-dot red"></div>
@@ -502,8 +494,7 @@ select option {
           </div>
         </div>
 
-        <!-- Card 2: Defender Disaster Response -->
-        <div class="rolodex-card" data-index="2">
+        <div class="rolodex-card" data-index="2" data-url="https://defenderdr.com">
           <div class="browser-frame">
             <div class="browser-chrome">
               <div class="browser-dot red"></div>
@@ -524,8 +515,7 @@ select option {
           </div>
         </div>
 
-        <!-- Card 3: Neos Advisors -->
-        <div class="rolodex-card" data-index="3">
+        <div class="rolodex-card" data-index="3" data-url="https://neosadvisors.ca">
           <div class="browser-frame">
             <div class="browser-chrome">
               <div class="browser-dot red"></div>
@@ -548,7 +538,6 @@ select option {
 
       </div>
     </div>
-    <!-- Progress dots -->
     <div class="rolodex-dots" id="rolodexDots">
       <div class="rolodex-dot active" data-dot="0"></div>
       <div class="rolodex-dot" data-dot="1"></div>
@@ -558,90 +547,46 @@ select option {
   </div>
 
   <!-- Mobile: Vertical card stack -->
-  <div class="mobile-card-stack pb-24">
-    <!-- Mobile Card 0 -->
+  <div class="mobile-card-stack">
     <div class="flex flex-col items-center">
       <div class="browser-frame">
-        <div class="browser-chrome">
-          <div class="browser-dot red"></div>
-          <div class="browser-dot yellow"></div>
-          <div class="browser-dot green"></div>
-          <span class="browser-url">thebakingbroker.ca</span>
-        </div>
+        <div class="browser-chrome"><div class="browser-dot red"></div><div class="browser-dot yellow"></div><div class="browser-dot green"></div><span class="browser-url">thebakingbroker.ca</span></div>
         <div class="browser-content">
           <div class="placeholder-screen" style="background: linear-gradient(135deg, #2a1a0e, #1a0f08);">The Baking Broker</div>
-          <div class="view-site-overlay" style="opacity:1;pointer-events:auto;">
-            <a href="https://thebakingbroker.ca" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a>
-          </div>
+          <div class="view-site-overlay" style="opacity:1;pointer-events:auto;"><a href="https://thebakingbroker.ca" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a></div>
         </div>
       </div>
-      <div class="card-info mt-4">
-        <h4>The Baking Broker</h4>
-        <p>Mortgage Brokerage</p>
-      </div>
+      <div class="card-info mt-4"><h4>The Baking Broker</h4><p>Mortgage Brokerage</p></div>
     </div>
-    <!-- Mobile Card 1 -->
     <div class="flex flex-col items-center">
       <div class="browser-frame">
-        <div class="browser-chrome">
-          <div class="browser-dot red"></div>
-          <div class="browser-dot yellow"></div>
-          <div class="browser-dot green"></div>
-          <span class="browser-url">spiritvalley.ca</span>
-        </div>
+        <div class="browser-chrome"><div class="browser-dot red"></div><div class="browser-dot yellow"></div><div class="browser-dot green"></div><span class="browser-url">spiritvalley.ca</span></div>
         <div class="browser-content">
           <div class="placeholder-screen" style="background: linear-gradient(135deg, #0e2a1a, #081a0f);">Spirit Valley</div>
-          <div class="view-site-overlay" style="opacity:1;pointer-events:auto;">
-            <a href="https://spiritvalley.ca" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a>
-          </div>
+          <div class="view-site-overlay" style="opacity:1;pointer-events:auto;"><a href="https://spiritvalley.ca" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a></div>
         </div>
       </div>
-      <div class="card-info mt-4">
-        <h4>Spirit Valley</h4>
-        <p>Indigenous Business</p>
-      </div>
+      <div class="card-info mt-4"><h4>Spirit Valley</h4><p>Indigenous Business</p></div>
     </div>
-    <!-- Mobile Card 2 -->
     <div class="flex flex-col items-center">
       <div class="browser-frame">
-        <div class="browser-chrome">
-          <div class="browser-dot red"></div>
-          <div class="browser-dot yellow"></div>
-          <div class="browser-dot green"></div>
-          <span class="browser-url">defenderdr.com</span>
-        </div>
+        <div class="browser-chrome"><div class="browser-dot red"></div><div class="browser-dot yellow"></div><div class="browser-dot green"></div><span class="browser-url">defenderdr.com</span></div>
         <div class="browser-content">
           <div class="placeholder-screen" style="background: linear-gradient(135deg, #2a2a0e, #1a1a08);">Defender Disaster Response</div>
-          <div class="view-site-overlay" style="opacity:1;pointer-events:auto;">
-            <a href="https://defenderdr.com" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a>
-          </div>
+          <div class="view-site-overlay" style="opacity:1;pointer-events:auto;"><a href="https://defenderdr.com" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a></div>
         </div>
       </div>
-      <div class="card-info mt-4">
-        <h4>Defender Disaster Response</h4>
-        <p>Disaster Response</p>
-      </div>
+      <div class="card-info mt-4"><h4>Defender Disaster Response</h4><p>Disaster Response</p></div>
     </div>
-    <!-- Mobile Card 3 -->
     <div class="flex flex-col items-center">
       <div class="browser-frame">
-        <div class="browser-chrome">
-          <div class="browser-dot red"></div>
-          <div class="browser-dot yellow"></div>
-          <div class="browser-dot green"></div>
-          <span class="browser-url">neosadvisors.ca</span>
-        </div>
+        <div class="browser-chrome"><div class="browser-dot red"></div><div class="browser-dot yellow"></div><div class="browser-dot green"></div><span class="browser-url">neosadvisors.ca</span></div>
         <div class="browser-content">
           <div class="placeholder-screen" style="background: linear-gradient(135deg, #0e1a2a, #08101a);">Neos Advisors</div>
-          <div class="view-site-overlay" style="opacity:1;pointer-events:auto;">
-            <a href="https://neosadvisors.ca" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a>
-          </div>
+          <div class="view-site-overlay" style="opacity:1;pointer-events:auto;"><a href="https://neosadvisors.ca" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a></div>
         </div>
       </div>
-      <div class="card-info mt-4">
-        <h4>Neos Advisors</h4>
-        <p>Construction Advisory</p>
-      </div>
+      <div class="card-info mt-4"><h4>Neos Advisors</h4><p>Construction Advisory</p></div>
     </div>
   </div>
 </section>
@@ -785,72 +730,107 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ===== 3D ROLODEX CAROUSEL (Desktop only) =====
-  if (window.innerWidth > 768) {
-    gsap.registerPlugin(ScrollTrigger);
+  // ===== 3D ROLODEX — AUTO-SPINNING, PAUSE ON HOVER =====
+  const wheel = document.getElementById('rolodexWheel');
+  const scene = document.getElementById('rolodexScene');
+  if (!wheel || !scene || window.innerWidth <= 768) return;
 
-    const cards = document.querySelectorAll('#rolodexWheel .rolodex-card');
-    const dots = document.querySelectorAll('#rolodexDots .rolodex-dot');
-    const numCards = cards.length;
-    const angleStep = 360 / numCards; // 90deg per card
-    const radius = 320; // distance from center of wheel
+  const cards = wheel.querySelectorAll('.rolodex-card');
+  const dots = document.querySelectorAll('#rolodexDots .rolodex-dot');
+  const numCards = cards.length;
+  const angleStep = 360 / numCards; // 90deg between each card
+  const radius = 380; // Z-distance from center — controls how "spread out" the ring is
 
-    // Position cards on the wheel (3D ring around X-axis)
-    cards.forEach((card, i) => {
-      const angle = i * angleStep;
-      gsap.set(card, {
-        rotationX: -angle,
-        transformOrigin: `center center -${radius}px`,
-        z: 0,
-      });
+  // Place each card evenly around a Y-axis ring
+  cards.forEach((card, i) => {
+    const angle = i * angleStep;
+    gsap.set(card, {
+      rotateY: angle,
+      transformOrigin: `50% 50% -${radius}px`,
     });
+  });
 
-    let currentIndex = 0;
+  // Current wheel rotation angle (continuous, not snapped)
+  let currentAngle = 0;
+  let paused = false;
+  let autoSpeed = 0.15; // degrees per frame — slow elegant spin
 
-    function updateActiveCard(index) {
-      cards.forEach((c, i) => {
-        c.classList.toggle('active', i === index);
-      });
-      dots.forEach((d, i) => {
-        d.classList.toggle('active', i === index);
-      });
-      currentIndex = index;
+  // Determine which card index is "front-facing" at a given angle
+  function getFrontIndex(angle) {
+    // Normalize to 0-360
+    let norm = ((angle % 360) + 360) % 360;
+    // The front card is the one whose position angle is closest to the current rotation
+    // Card i is at angle i*angleStep. It faces front when wheelRotation ≡ i*angleStep (mod 360)
+    let best = 0;
+    let bestDist = 360;
+    for (let i = 0; i < numCards; i++) {
+      let cardAngle = i * angleStep;
+      let dist = Math.abs(((norm - cardAngle + 180) % 360) - 180);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = i;
+      }
     }
+    return best;
+  }
 
-    // Set total scroll distance: enough height for all card transitions + some buffer
-    const totalScrollHeight = numCards * window.innerHeight;
-    const section = document.querySelector('.rolodex-section');
-    section.style.height = totalScrollHeight + 'px';
-
-    // Main scroll animation
-    ScrollTrigger.create({
-      trigger: '.rolodex-section',
-      start: 'top top',
-      end: 'bottom bottom',
-      pin: false, // we use CSS sticky instead
-      scrub: true,
-      onUpdate: (self) => {
-        const progress = self.progress;
-        // Map progress 0-1 to 0 to (numCards-1) card positions
-        const rawIndex = progress * (numCards - 1);
-        const snapIndex = Math.round(rawIndex);
-        const rotationAngle = rawIndex * angleStep;
-
-        gsap.to('#rolodexWheel', {
-          rotationX: rotationAngle,
-          duration: 0.1,
-          ease: 'power2.out',
-          overwrite: 'auto',
-        });
-
-        if (snapIndex !== currentIndex) {
-          updateActiveCard(Math.min(snapIndex, numCards - 1));
-        }
+  function updateVisuals() {
+    const frontIdx = getFrontIndex(currentAngle);
+    cards.forEach((c, i) => {
+      if (i === frontIdx) {
+        c.style.filter = 'brightness(1) blur(0px)';
+        c.style.opacity = '1';
+      } else {
+        c.style.filter = 'brightness(0.35) blur(3px)';
+        c.style.opacity = '0.55';
       }
     });
-
-    updateActiveCard(0);
+    dots.forEach((d, i) => {
+      d.classList.toggle('active', i === frontIdx);
+    });
   }
+
+  function setWheelAngle(angle) {
+    gsap.set(wheel, { rotateY: -angle });
+    updateVisuals();
+  }
+
+  // Auto-spin loop
+  function tick() {
+    if (!paused) {
+      currentAngle += autoSpeed;
+      setWheelAngle(currentAngle);
+    }
+    requestAnimationFrame(tick);
+  }
+  setWheelAngle(0);
+  requestAnimationFrame(tick);
+
+  // Pause on hover over the entire scene area
+  scene.addEventListener('mouseenter', () => { paused = true; });
+  scene.addEventListener('mouseleave', () => { paused = false; });
+
+  // Clicking a dot snaps to that card
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      // Calculate the shortest rotation to reach card i
+      const targetAngle = i * angleStep;
+      let norm = ((currentAngle % 360) + 360) % 360;
+      let diff = targetAngle - norm;
+      // Take the shortest path
+      if (diff > 180) diff -= 360;
+      if (diff < -180) diff += 360;
+      currentAngle += diff;
+      gsap.to({}, {
+        duration: 0.6,
+        ease: 'power2.inOut',
+        onUpdate: function() {
+          setWheelAngle(currentAngle);
+        }
+      });
+      setWheelAngle(currentAngle);
+    });
+  });
 
 });
 </script>
