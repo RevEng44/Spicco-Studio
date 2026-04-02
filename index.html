@@ -1017,40 +1017,42 @@ document.addEventListener('DOMContentLoaded', () => {
   const fingerprint = document.getElementById('contactFingerprint');
   if (fingerprint) {
     const fpPaths = fingerprint.querySelectorAll('path');
-    // Init: measure each path and hide it
+
+    // Init: measure each path, hide it, NO transition yet
     fpPaths.forEach(path => {
       const len = path.getTotalLength();
       path.setAttribute('data-length', len);
-      path.style.strokeDasharray = len + 'px';
-      path.style.strokeDashoffset = len + 'px';
-      path.style.transition = 'none';
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = len;
     });
 
-    // Force reflow so initial state is applied before we enable transitions
-    fingerprint.offsetHeight;
+    let fpHasFired = false;
 
-    // Now enable transitions with staggered delays
-    fpPaths.forEach((path, i) => {
-      path.style.transition = `stroke-dashoffset 1.8s ease ${i * 0.15}s`;
-    });
-
-    let fpAnimated = false;
     const fpObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting && !fpAnimated) {
-          fpAnimated = true;
-          fpPaths.forEach(path => {
-            path.style.strokeDashoffset = '0px';
+        if (entry.isIntersecting && !fpHasFired) {
+          fpHasFired = true;
+          // Enable transitions NOW, then animate on the next frame
+          requestAnimationFrame(() => {
+            fpPaths.forEach((path, i) => {
+              path.style.transition = `stroke-dashoffset 2s ease ${i * 0.12}s`;
+            });
+            requestAnimationFrame(() => {
+              fpPaths.forEach(path => {
+                path.style.strokeDashoffset = '0';
+              });
+            });
           });
-        } else if (!entry.isIntersecting && fpAnimated) {
-          fpAnimated = false;
-          fpPaths.forEach(path => {
-            const len = path.getAttribute('data-length');
-            path.style.strokeDashoffset = len + 'px';
+        } else if (!entry.isIntersecting && fpHasFired) {
+          fpHasFired = false;
+          // Reverse: reset all paths
+          fpPaths.forEach((path, i) => {
+            path.style.transition = `stroke-dashoffset 1.2s ease ${i * 0.05}s`;
+            path.style.strokeDashoffset = path.getAttribute('data-length');
           });
         }
       });
-    }, { threshold: 0.15 });
+    }, { threshold: 0.3, rootMargin: '0px 0px -100px 0px' });
     fpObserver.observe(document.getElementById('contact'));
   }
 
