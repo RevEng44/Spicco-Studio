@@ -356,14 +356,15 @@ select option {
 /* ===== FINGERPRINT SVG BACKGROUND ===== */
 .contact-fingerprint {
   position: absolute;
-  right: -2%;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 500px;
-  height: 600px;
-  opacity: 0.08;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.06;
   pointer-events: none;
   z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .contact-fingerprint svg {
   width: 100%;
@@ -372,16 +373,7 @@ select option {
 .contact-fingerprint path {
   fill: none;
   stroke: #C8922A;
-  stroke-width: 2.5;
   stroke-linecap: round;
-}
-@media (max-width: 768px) {
-  .contact-fingerprint {
-    right: -15%;
-    width: 350px;
-    height: 420px;
-    opacity: 0.06;
-  }
 }
 
 /* ===== LOADER — FORGE SPARK ===== */
@@ -571,9 +563,12 @@ select option {
 
 <!-- ========== HERO SECTION ========== -->
 <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-  <div class="absolute inset-0 z-0 pointer-events-none opacity-20">
-    <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px]"></div>
-    <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-on-secondary/10 rounded-full blur-[150px]"></div>
+  <!-- Background video — flipped vertically so drops flow downward -->
+  <div class="absolute inset-0 z-0 pointer-events-none">
+    <video autoplay muted loop playsinline class="w-full h-full object-cover" style="transform: scaleY(-1); opacity: 0.4;">
+      <source src="images/hero-video.mp4" type="video/mp4"/>
+    </video>
+    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0A08] via-[#0D0A08]/60 to-[#0D0A08]/80"></div>
   </div>
   <div class="relative z-10 max-w-7xl mx-auto px-8 text-center">
     <h1 class="font-headline text-5xl md:text-8xl font-bold tracking-tighter leading-tight mb-8">
@@ -869,19 +864,33 @@ select option {
 <!-- ========== CONTACT SECTION ========== -->
 <section class="py-32 bg-surface-container-lowest relative overflow-hidden" id="contact">
   <!-- Fingerprint SVG background -->
-  <div class="contact-fingerprint fp-draw" id="contactFingerprint">
-    <svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-      <!-- Outer fingerprint loops -->
-      <path d="M100,20 C145,20 170,50 170,95 C170,140 145,185 100,220 C55,185 30,140 30,95 C30,50 55,20 100,20" style="--path-length:520"/>
-      <path d="M100,35 C138,35 158,58 158,95 C158,132 138,172 100,205 C62,172 42,132 42,95 C42,58 62,35 100,35" style="--path-length:460"/>
-      <path d="M100,50 C130,50 148,68 148,95 C148,122 130,158 100,188 C70,158 52,122 52,95 C52,68 70,50 100,50" style="--path-length:400"/>
-      <path d="M100,65 C122,65 138,78 138,95 C138,112 122,145 100,170 C78,145 62,112 62,95 C62,78 78,65 100,65" style="--path-length:340"/>
-      <!-- Inner whorls -->
-      <path d="M100,78 C115,78 128,86 128,95 C128,110 115,132 100,152 C85,132 72,110 72,95 C72,86 85,78 100,78" style="--path-length:260"/>
-      <path d="M100,88 C108,88 118,92 118,100 C118,110 108,125 100,138 C92,125 82,110 82,100 C82,92 92,88 100,88" style="--path-length:180"/>
-      <!-- S-curve through center -->
-      <path d="M88,60 C88,60 112,80 112,100 C112,120 88,130 88,150 C88,170 100,180 100,180" style="--path-length:200"/>
-      <path d="M112,55 C112,55 88,75 88,100 C88,125 112,135 112,155 C112,170 100,182 100,182" style="--path-length:200"/>
+  <div class="contact-fingerprint" id="contactFingerprint">
+    <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <!-- Large flowing fingerprint whorls spanning the section -->
+      <!-- Outer arches -->
+      <path d="M600,30 C820,30 980,120 980,300 C980,480 820,570 600,570 C380,570 220,480 220,300 C220,120 380,30 600,30" stroke-width="1.5"/>
+      <path d="M600,60 C790,60 940,140 940,300 C940,460 790,540 600,540 C410,540 260,460 260,300 C260,140 410,60 600,60" stroke-width="1.5"/>
+      <path d="M600,90 C760,90 900,160 900,300 C900,440 760,510 600,510 C440,510 300,440 300,300 C300,160 440,90 600,90" stroke-width="1.5"/>
+      <path d="M600,120 C730,120 860,180 860,300 C860,420 730,480 600,480 C470,480 340,420 340,300 C340,180 470,120 600,120" stroke-width="1.5"/>
+      <path d="M600,150 C700,150 820,200 820,300 C820,400 700,450 600,450 C500,450 380,400 380,300 C380,200 500,150 600,150" stroke-width="1.5"/>
+      <!-- Inner tighter loops -->
+      <path d="M600,185 C680,185 780,225 780,300 C780,375 680,415 600,415 C520,415 420,375 420,300 C420,225 520,185 600,185" stroke-width="1.8"/>
+      <path d="M600,215 C660,215 740,248 740,300 C740,352 660,385 600,385 C540,385 460,352 460,300 C460,248 540,215 600,215" stroke-width="1.8"/>
+      <path d="M600,245 C640,245 700,268 700,300 C700,332 640,355 600,355 C560,355 500,332 500,300 C500,268 560,245 600,245" stroke-width="2"/>
+      <path d="M600,270 C625,270 665,282 665,300 C665,318 625,330 600,330 C575,330 535,318 535,300 C535,282 575,270 600,270" stroke-width="2"/>
+      <!-- S-curves flowing through center -->
+      <path d="M520,80 C520,80 680,160 680,300 C680,440 520,480 520,520" stroke-width="1.8"/>
+      <path d="M680,80 C680,80 520,160 520,300 C520,440 680,480 680,520" stroke-width="1.8"/>
+      <!-- Extended flowing lines left and right -->
+      <path d="M100,300 C200,200 350,150 600,150" stroke-width="1"/>
+      <path d="M1100,300 C1000,200 850,150 600,150" stroke-width="1"/>
+      <path d="M100,300 C200,400 350,450 600,450" stroke-width="1"/>
+      <path d="M1100,300 C1000,400 850,450 600,450" stroke-width="1"/>
+      <!-- Subtle outer wisps -->
+      <path d="M150,150 C300,80 450,50 600,50" stroke-width="0.8"/>
+      <path d="M1050,150 C900,80 750,50 600,50" stroke-width="0.8"/>
+      <path d="M150,450 C300,520 450,550 600,550" stroke-width="0.8"/>
+      <path d="M1050,450 C900,520 750,550 600,550" stroke-width="0.8"/>
     </svg>
   </div>
   <div class="max-w-4xl mx-auto px-8 relative z-10">
@@ -932,6 +941,7 @@ select option {
 <footer class="bg-[#0D0A08] border-t border-[#504536]/15">
   <div class="flex flex-col md:flex-row justify-between items-center w-full px-12 py-10 gap-6">
     <div class="flex items-center gap-3">
+      <img alt="SPICCO STUDIO" class="h-10 w-auto" src="images/logo.png"/>
       <span class="text-2xl font-extrabold tracking-wide text-[#E9E1DC]" style="font-family:'Saira Extra Condensed',sans-serif;">SPICCO STUDIO</span>
     </div>
     <p class="font-body text-sm tracking-wide text-[#E9E1DC]/60 italic">
