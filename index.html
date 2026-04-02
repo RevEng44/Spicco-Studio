@@ -5,7 +5,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>SPICCO STUDIO | FORGED FOR THE BOLD</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Saira+Extra+Condensed:wght@700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <!-- GSAP + ScrollTrigger -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -324,22 +324,40 @@ select option {
   color: #e9e1dc;
 }
 
-/* ===== LOADER ===== */
-@keyframes ember-pulse {
-  0%, 100% { box-shadow: 0 0 30px rgba(200, 146, 42, 0.15), 0 0 60px rgba(200, 146, 42, 0.05); }
-  50% { box-shadow: 0 0 50px rgba(200, 146, 42, 0.3), 0 0 100px rgba(200, 146, 42, 0.1); }
-}
-@keyframes loader-fade-in {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes loader-bar-sweep {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
+/* ===== LOADER — FORGE SPARK ===== */
 @keyframes loader-slide-up {
   from { transform: translateY(0); }
   to { transform: translateY(-100%); }
+}
+@keyframes logo-stamp {
+  0% { opacity: 0; transform: scale(1.1); filter: brightness(0); }
+  30% { opacity: 1; transform: scale(1); filter: brightness(0.15); }
+  100% { opacity: 1; transform: scale(1); filter: brightness(0.15); }
+}
+@keyframes logo-ignite {
+  0% { filter: brightness(0.15); }
+  100% { filter: brightness(1); }
+}
+@keyframes spark-sweep {
+  0% { left: -20%; opacity: 1; }
+  70% { opacity: 1; }
+  100% { left: 120%; opacity: 0; }
+}
+@keyframes spark-glow-trail {
+  0% { clip-path: inset(0 100% 0 0); }
+  100% { clip-path: inset(0 0% 0 0); }
+}
+@keyframes sparks-scatter {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-40px) scale(0); }
+}
+@keyframes text-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes bar-fill {
+  0% { width: 0; }
+  100% { width: 100%; }
 }
 .loader-screen {
   position: fixed;
@@ -349,41 +367,123 @@ select option {
   align-items: center;
   justify-content: center;
   background: #0D0A08;
-  animation: loader-slide-up 0.7s cubic-bezier(0.76, 0, 0.24, 1) 2.6s forwards;
+  animation: loader-slide-up 0.7s cubic-bezier(0.76, 0, 0.24, 1) 3.4s forwards;
 }
-.loader-logo {
-  animation: loader-fade-in 0.8s ease 0.2s both, ember-pulse 2s ease-in-out 0.2s infinite;
+.loader-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/* Logo appears dim like cold stamped metal */
+.loader-logo-wrap {
+  position: relative;
+  animation: logo-stamp 0.6s ease 0.3s both;
+}
+/* After spark passes, logo ignites to full brightness */
+.loader-logo-wrap.ignite {
+  animation: logo-stamp 0.6s ease 0.3s both, logo-ignite 0.4s ease 1.4s forwards;
+}
+.loader-logo-wrap img {
+  height: 80px;
+  width: auto;
+  position: relative;
+  z-index: 2;
+}
+/* Bronze glow that reveals left-to-right behind the logo */
+.loader-glow {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(ellipse at center, rgba(200,146,42,0.35) 0%, transparent 70%);
+  z-index: 1;
+  animation: spark-glow-trail 0.6s ease 1.2s both;
   border-radius: 50%;
-  padding: 10px;
 }
+/* The spark itself — a bright point that sweeps across */
+.loader-spark {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow:
+    0 0 8px 4px rgba(255,255,255,0.9),
+    0 0 20px 8px rgba(248,188,81,0.8),
+    0 0 40px 16px rgba(200,146,42,0.4);
+  z-index: 10;
+  animation: spark-sweep 0.8s ease-in 0.9s both;
+}
+/* Tiny scattered spark particles */
+.loader-particles {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  z-index: 9;
+}
+.loader-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #F8BC51;
+  border-radius: 50%;
+  opacity: 0;
+}
+.loader-particle:nth-child(1) { animation: sparks-scatter 0.5s ease 1.3s both; transform-origin: center; top: -8px; left: -2px; }
+.loader-particle:nth-child(2) { animation: sparks-scatter 0.6s ease 1.35s both; top: -12px; left: 4px; }
+.loader-particle:nth-child(3) { animation: sparks-scatter 0.4s ease 1.25s both; top: -5px; left: -6px; }
+.loader-particle:nth-child(4) { animation: sparks-scatter 0.55s ease 1.4s both; top: -15px; left: 0px; }
+.loader-particle:nth-child(5) { animation: sparks-scatter 0.45s ease 1.3s both; top: -10px; left: 6px; }
+
+/* Title and tagline */
 .loader-title {
-  animation: loader-fade-in 0.7s ease 0.5s both;
+  animation: text-fade-in 0.6s ease 1.6s both;
 }
 .loader-tagline {
-  animation: loader-fade-in 0.7s ease 0.9s both;
+  animation: text-fade-in 0.6s ease 1.9s both;
 }
+/* Loading bar */
 .loader-bar-track {
-  animation: loader-fade-in 0.5s ease 0.7s both;
+  animation: text-fade-in 0.4s ease 1.7s both;
 }
-.loader-bar-inner {
-  animation: loader-bar-sweep 1.2s ease-in-out infinite;
+.loader-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #7B4A1E, #C8922A);
+  animation: bar-fill 1.2s ease 2.0s both;
 }
 </style>
 </head>
 <body class="bg-background text-on-background font-body selection:bg-primary/30">
 
-<!-- ========== LOADING SCREEN ========== -->
-<div class="loader-screen">
-  <div class="flex flex-col items-center">
-    <div class="loader-logo">
-      <img src="images/logo.png" alt="Spicco Studio" class="h-20 w-auto"/>
+<!-- ========== LOADING SCREEN — FORGE SPARK ========== -->
+<div class="loader-screen" id="loaderScreen">
+  <div class="loader-content">
+    <!-- Logo with spark effect -->
+    <div class="loader-logo-wrap ignite">
+      <img src="images/logo.png" alt="Spicco Studio"/>
+      <div class="loader-glow"></div>
+      <div class="loader-spark"></div>
+      <!-- Scattered spark particles -->
+      <div class="loader-particles">
+        <div class="loader-particle"></div>
+        <div class="loader-particle"></div>
+        <div class="loader-particle"></div>
+        <div class="loader-particle"></div>
+        <div class="loader-particle"></div>
+      </div>
     </div>
-    <h1 class="loader-title font-headline text-3xl md:text-5xl font-black tracking-tighter text-[#E9E1DC] mt-6">
+    <!-- Title -->
+    <h1 class="loader-title text-4xl md:text-6xl font-extrabold tracking-wide text-[#E9E1DC] mt-8" style="font-family:'Saira Extra Condensed',sans-serif;">
       SPICCO STUDIO
     </h1>
+    <!-- Loading bar -->
     <div class="loader-bar-track w-48 h-[1px] bg-white/10 overflow-hidden relative mt-6">
-      <div class="loader-bar-inner absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-[#C8922A] to-transparent"></div>
+      <div class="loader-bar-fill"></div>
     </div>
+    <!-- Tagline -->
     <span class="loader-tagline font-headline text-[10px] uppercase tracking-[0.3em] text-[#C8922A] mt-4">
       Forged for the Bold
     </span>
@@ -395,7 +495,7 @@ select option {
   <div class="flex justify-between items-center w-full px-8 py-6 max-w-none">
     <div class="flex items-center gap-4">
       <img alt="SPICCO STUDIO" class="h-16 w-auto" src="images/logo.png"/>
-      <span class="text-2xl font-black tracking-tighter text-[#E9E1DC] font-headline">SPICCO STUDIO</span>
+      <span class="text-3xl font-extrabold tracking-wide text-[#E9E1DC]" style="font-family:'Saira Extra Condensed',sans-serif;">SPICCO STUDIO</span>
     </div>
     <div class="hidden md:flex items-center gap-10">
       <a class="font-headline uppercase tracking-[0.15em] text-sm font-bold text-[#E9E1DC] hover:text-[#F8BC51] transition-colors duration-300" href="#services">Services</a>
@@ -756,7 +856,7 @@ select option {
 <footer class="bg-[#0D0A08] border-t border-[#504536]/15">
   <div class="flex flex-col md:flex-row justify-between items-center w-full px-12 py-10 gap-6">
     <div class="flex items-center gap-3">
-      <span class="text-xl font-bold text-[#E9E1DC] font-headline tracking-tighter">SPICCO STUDIO</span>
+      <span class="text-2xl font-extrabold tracking-wide text-[#E9E1DC]" style="font-family:'Saira Extra Condensed',sans-serif;">SPICCO STUDIO</span>
     </div>
     <p class="font-body text-sm tracking-wide text-[#E9E1DC]/60 italic">
       FORGED FOR THE BOLD.
