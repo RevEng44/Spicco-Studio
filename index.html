@@ -323,15 +323,78 @@ select option {
   background: #161310;
   color: #e9e1dc;
 }
+
+/* ===== LOADER ===== */
+@keyframes ember-pulse {
+  0%, 100% { box-shadow: 0 0 30px rgba(200, 146, 42, 0.15), 0 0 60px rgba(200, 146, 42, 0.05); }
+  50% { box-shadow: 0 0 50px rgba(200, 146, 42, 0.3), 0 0 100px rgba(200, 146, 42, 0.1); }
+}
+@keyframes loader-fade-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes loader-bar-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+@keyframes loader-slide-up {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100%); }
+}
+.loader-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0D0A08;
+  animation: loader-slide-up 0.7s cubic-bezier(0.76, 0, 0.24, 1) 2.6s forwards;
+}
+.loader-logo {
+  animation: loader-fade-in 0.8s ease 0.2s both, ember-pulse 2s ease-in-out 0.2s infinite;
+  border-radius: 50%;
+  padding: 10px;
+}
+.loader-title {
+  animation: loader-fade-in 0.7s ease 0.5s both;
+}
+.loader-tagline {
+  animation: loader-fade-in 0.7s ease 0.9s both;
+}
+.loader-bar-track {
+  animation: loader-fade-in 0.5s ease 0.7s both;
+}
+.loader-bar-inner {
+  animation: loader-bar-sweep 1.2s ease-in-out infinite;
+}
 </style>
 </head>
 <body class="bg-background text-on-background font-body selection:bg-primary/30">
+
+<!-- ========== LOADING SCREEN ========== -->
+<div class="loader-screen">
+  <div class="flex flex-col items-center">
+    <div class="loader-logo">
+      <img src="images/logo.png" alt="Spicco Studio" class="h-20 w-auto"/>
+    </div>
+    <h1 class="loader-title font-headline text-3xl md:text-5xl font-black tracking-tighter text-[#E9E1DC] mt-6">
+      SPICCO STUDIO
+    </h1>
+    <div class="loader-bar-track w-48 h-[1px] bg-white/10 overflow-hidden relative mt-6">
+      <div class="loader-bar-inner absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-[#C8922A] to-transparent"></div>
+    </div>
+    <span class="loader-tagline font-headline text-[10px] uppercase tracking-[0.3em] text-[#C8922A] mt-4">
+      Forged for the Bold
+    </span>
+  </div>
+</div>
 
 <!-- ========== NAVBAR ========== -->
 <nav id="mainNav" class="fixed top-0 w-full z-50 bg-[#0D0A08]/80 backdrop-blur-xl shadow-[0_20px_50px_rgba(13,10,8,0.5)]">
   <div class="flex justify-between items-center w-full px-8 py-6 max-w-none">
     <div class="flex items-center gap-4">
-      <img alt="SPICCO STUDIO" class="h-8 w-auto" src="images/logo.png"/>
+      <img alt="SPICCO STUDIO" class="h-16 w-auto" src="images/logo.png"/>
       <span class="text-2xl font-black tracking-tighter text-[#E9E1DC] font-headline">SPICCO STUDIO</span>
     </div>
     <div class="hidden md:flex items-center gap-10">
@@ -362,7 +425,7 @@ select option {
     </p>
     <div class="flex flex-col md:flex-row items-center justify-center gap-6">
       <a class="bronze-gradient w-full md:w-auto px-10 py-5 font-headline font-bold uppercase tracking-widest text-on-primary-fixed hover:scale-105 transition-transform duration-500 no-underline" href="#portfolio">
-        See Our Work
+        See Some of Our Work
       </a>
       <a class="border border-outline-variant/30 w-full md:w-auto px-10 py-5 font-headline font-bold uppercase tracking-widest text-on-surface hover:border-primary transition-colors duration-500 no-underline" href="#contact">
         Get a Quote
@@ -448,7 +511,7 @@ select option {
 <section class="py-32 bg-background" id="portfolio">
   <div class="text-center px-8 mb-8">
     <span class="font-headline text-primary text-sm uppercase tracking-[0.2em] font-bold mb-4 block">The Forge</span>
-    <h2 class="font-headline text-4xl md:text-6xl font-bold uppercase">Our Work</h2>
+    <h2 class="font-headline text-4xl md:text-6xl font-bold uppercase">Some of Our Work</h2>
     <p class="text-on-surface-variant text-lg mt-6 max-w-xl mx-auto font-light">A few of the brands we've helped rise above the noise.</p>
   </div>
 
@@ -474,7 +537,7 @@ select option {
           </div>
           <div class="card-info">
             <h4>The Baking Broker</h4>
-            <p>Mortgage Brokerage</p>
+            <p>Mortgage Broker</p>
           </div>
         </div>
 
@@ -508,15 +571,15 @@ select option {
               <span class="browser-url">defenderdr.com</span>
             </div>
             <div class="browser-content">
-              <img src="images/portfolio-defenderdr.png" alt="Defender Disaster Response website"/>
+              <img src="images/portfolio-defenderdr.png" alt="Defender Construction Products website"/>
               <div class="view-site-overlay">
                 <a href="https://defenderdr.com" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a>
               </div>
             </div>
           </div>
           <div class="card-info">
-            <h4>Defender Disaster Response</h4>
-            <p>Disaster Response</p>
+            <h4>Defender Construction Products</h4>
+            <p>Construction Products</p>
           </div>
         </div>
 
@@ -561,7 +624,7 @@ select option {
           <div class="view-site-overlay" style="opacity:1;pointer-events:auto;"><a href="https://thebakingbroker.ca" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a></div>
         </div>
       </div>
-      <div class="card-info mt-4"><h4>The Baking Broker</h4><p>Mortgage Brokerage</p></div>
+      <div class="card-info mt-4"><h4>The Baking Broker</h4><p>Mortgage Broker</p></div>
     </div>
     <div class="flex flex-col items-center">
       <div class="browser-frame">
@@ -577,11 +640,11 @@ select option {
       <div class="browser-frame">
         <div class="browser-chrome"><div class="browser-dot red"></div><div class="browser-dot yellow"></div><div class="browser-dot green"></div><span class="browser-url">defenderdr.com</span></div>
         <div class="browser-content">
-          <img src="images/portfolio-defenderdr.png" alt="Defender Disaster Response website"/>
+          <img src="images/portfolio-defenderdr.png" alt="Defender Construction Products website"/>
           <div class="view-site-overlay" style="opacity:1;pointer-events:auto;"><a href="https://defenderdr.com" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a></div>
         </div>
       </div>
-      <div class="card-info mt-4"><h4>Defender Disaster Response</h4><p>Disaster Response</p></div>
+      <div class="card-info mt-4"><h4>Defender Construction Products</h4><p>Construction Products</p></div>
     </div>
     <div class="flex flex-col items-center">
       <div class="browser-frame">
@@ -617,7 +680,7 @@ select option {
           </div>
           <div>
             <h4 class="font-headline text-xl font-bold uppercase mb-2">Industry-Focused</h4>
-            <p class="text-on-surface-variant leading-relaxed">Specialized in construction, real estate, and industrial sectors where grit meets growth.</p>
+            <p class="text-on-surface-variant leading-relaxed">Specialized in construction and industrial sectors where grit meets growth.</p>
           </div>
         </div>
         <div class="flex gap-6">
