@@ -324,6 +324,71 @@ select option {
   color: #e9e1dc;
 }
 
+/* ===== SERVICE CARD SCROLL REVEAL ===== */
+.service-card {
+  opacity: 0;
+  transform: translateY(40px);
+}
+.service-card.revealed {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s ease, transform 0.7s ease, box-shadow 0.5s ease;
+}
+/* Stagger delays applied via JS */
+.service-card.revealed:nth-child(1) { transition-delay: 0s; }
+.service-card.revealed:nth-child(2) { transition-delay: 0.1s; }
+.service-card.revealed:nth-child(3) { transition-delay: 0.2s; }
+.service-card.revealed:nth-child(4) { transition-delay: 0.3s; }
+.service-card.revealed:nth-child(5) { transition-delay: 0.4s; }
+.service-card.revealed:nth-child(6) { transition-delay: 0.5s; }
+
+/* Icon pulse on card hover */
+@keyframes icon-pulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.25); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+.service-card:hover .material-symbols-outlined {
+  animation: icon-pulse 0.5s ease;
+}
+
+/* ===== FINGERPRINT SVG BACKGROUND ===== */
+.contact-fingerprint {
+  position: absolute;
+  right: -5%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 500px;
+  height: 600px;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+}
+.contact-fingerprint path {
+  fill: none;
+  stroke: #C8922A;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+/* Line-draw animation */
+.fp-draw path {
+  stroke-dasharray: var(--path-length);
+  stroke-dashoffset: var(--path-length);
+  transition: stroke-dashoffset 2s ease;
+}
+.fp-draw.animate path {
+  stroke-dashoffset: 0;
+}
+@media (max-width: 768px) {
+  .contact-fingerprint {
+    right: -15%;
+    width: 350px;
+    height: 420px;
+    opacity: 0.03;
+  }
+}
+
 /* ===== LOADER — FORGE SPARK ===== */
 @keyframes loader-slide-up {
   from { transform: translateY(0); }
@@ -807,8 +872,24 @@ select option {
 </section>
 
 <!-- ========== CONTACT SECTION ========== -->
-<section class="py-32 bg-surface-container-lowest" id="contact">
-  <div class="max-w-4xl mx-auto px-8">
+<section class="py-32 bg-surface-container-lowest relative overflow-hidden" id="contact">
+  <!-- Fingerprint SVG background -->
+  <div class="contact-fingerprint fp-draw" id="contactFingerprint">
+    <svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <!-- Outer fingerprint loops -->
+      <path d="M100,20 C145,20 170,50 170,95 C170,140 145,185 100,220 C55,185 30,140 30,95 C30,50 55,20 100,20" style="--path-length:520"/>
+      <path d="M100,35 C138,35 158,58 158,95 C158,132 138,172 100,205 C62,172 42,132 42,95 C42,58 62,35 100,35" style="--path-length:460"/>
+      <path d="M100,50 C130,50 148,68 148,95 C148,122 130,158 100,188 C70,158 52,122 52,95 C52,68 70,50 100,50" style="--path-length:400"/>
+      <path d="M100,65 C122,65 138,78 138,95 C138,112 122,145 100,170 C78,145 62,112 62,95 C62,78 78,65 100,65" style="--path-length:340"/>
+      <!-- Inner whorls -->
+      <path d="M100,78 C115,78 128,86 128,95 C128,110 115,132 100,152 C85,132 72,110 72,95 C72,86 85,78 100,78" style="--path-length:260"/>
+      <path d="M100,88 C108,88 118,92 118,100 C118,110 108,125 100,138 C92,125 82,110 82,100 C82,92 92,88 100,88" style="--path-length:180"/>
+      <!-- S-curve through center -->
+      <path d="M88,60 C88,60 112,80 112,100 C112,120 88,130 88,150 C88,170 100,180 100,180" style="--path-length:200"/>
+      <path d="M112,55 C112,55 88,75 88,100 C88,125 112,135 112,155 C112,170 100,182 100,182" style="--path-length:200"/>
+    </svg>
+  </div>
+  <div class="max-w-4xl mx-auto px-8 relative z-10">
     <div class="text-center mb-20">
       <span class="font-headline text-primary text-sm uppercase tracking-[0.2em] font-bold mb-4 block">Connection</span>
       <h2 class="font-headline text-4xl md:text-7xl font-bold uppercase">Let's Build Something.</h2>
@@ -897,6 +978,46 @@ document.addEventListener('DOMContentLoaded', () => {
       ticking = true;
     }
   });
+
+  // ===== SERVICE CARDS — STAGGERED SCROLL REVEAL =====
+  const serviceCards = document.querySelectorAll('.service-card');
+  if (serviceCards.length) {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    serviceCards.forEach(card => revealObserver.observe(card));
+  }
+
+  // ===== CONTACT FINGERPRINT — LINE DRAW ON SCROLL =====
+  const fingerprint = document.getElementById('contactFingerprint');
+  if (fingerprint) {
+    // Calculate and set actual path lengths
+    fingerprint.querySelectorAll('path').forEach(path => {
+      const len = path.getTotalLength();
+      path.style.setProperty('--path-length', len);
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = len;
+    });
+
+    let fpAnimated = false;
+    const fpObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !fpAnimated) {
+          fpAnimated = true;
+          fingerprint.classList.add('animate');
+        } else if (!entry.isIntersecting && fpAnimated) {
+          fpAnimated = false;
+          fingerprint.classList.remove('animate');
+        }
+      });
+    }, { threshold: 0.2 });
+    fpObserver.observe(fingerprint);
+  }
 
   // ===== 3D ROLODEX — AUTO-SPINNING, PAUSE ON HOVER =====
   const wheel = document.getElementById('rolodexWheel');
