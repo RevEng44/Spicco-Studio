@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Thank You | SPICCO STUDIO</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Saira+Extra+Condensed:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0D0A08;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Manrope', sans-serif;
+  color: #E9E1DC;
+  text-align: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+/* Subtle background glow */
+.bg-glow {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  filter: blur(150px);
+  opacity: 0.08;
+  pointer-events: none;
+}
+.bg-glow.one { background: #C8922A; top: -10%; left: -10%; }
+.bg-glow.two { background: #7B4A1E; bottom: -10%; right: -10%; }
+
+.content {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+}
+.logo { height: 80px; width: auto; margin-bottom: 1.5rem; }
+.brand {
+  font-family: 'Saira Extra Condensed', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  margin-bottom: 3rem;
+  color: #E9E1DC;
+}
+.divider {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, #7B4A1E, #C8922A);
+  margin: 0 auto 2.5rem;
+}
+h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+.bronze {
+  background: linear-gradient(45deg, #F8BC51, #C8922A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+p {
+  font-size: 1.1rem;
+  color: #d4c4b0;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
+.btn {
+  display: inline-block;
+  background: linear-gradient(45deg, #7B4A1E, #C8922A);
+  color: #281900;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 16px 40px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 40px rgba(200, 146, 42, 0.25);
+}
+.footer {
+  position: absolute;
+  bottom: 2rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(233, 225, 220, 0.15);
+  font-family: 'Manrope', sans-serif;
+}
+
+/* Fade-in animation */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.content > * {
+  animation: fade-up 0.7s ease both;
+}
+.content > :nth-child(1) { animation-delay: 0.1s; }
+.content > :nth-child(2) { animation-delay: 0.2s; }
+.content > :nth-child(3) { animation-delay: 0.3s; }
+.content > :nth-child(4) { animation-delay: 0.4s; }
+.content > :nth-child(5) { animation-delay: 0.5s; }
+.content > :nth-child(6) { animation-delay: 0.6s; }
+</style>
+</head>
+<body>
+
+<div class="bg-glow one"></div>
+<div class="bg-glow two"></div>
+
+<div class="content">
+  <img src="images/logo.png" alt="Spicco Studio" class="logo"/>
+  <div class="brand">SPICCO STUDIO</div>
+  <div class="divider"></div>
+  <h1>Your brief is <span class="bronze">in the forge.</span></h1>
+  <p>We've received your message and we're already thinking about how to make your brand impossible to ignore. Expect to hear from us within 24 hours.</p>
+  <a href="index.html" class="btn">Back to Home</a>
+</div>
+
+<div class="footer">&copy; 2025 Spicco Studio. All Rights Reserved.</div>
+
+</body>
+</html>
