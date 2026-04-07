@@ -571,6 +571,10 @@ select option {
     <div class="absolute inset-0 bg-gradient-to-t from-[#0D0A08] via-[#0D0A08]/40 to-[#0D0A08]/50"></div>
   </div>
   <div class="relative z-10 max-w-7xl mx-auto px-8 text-center">
+    <div class="inline-flex items-center gap-2 px-4 py-2 mb-8 border border-[#C8922A]/30 rounded-full bg-[#C8922A]/5 backdrop-blur-sm">
+      <span class="w-1.5 h-1.5 rounded-full bg-[#C8922A]"></span>
+      <span class="font-headline text-[11px] md:text-xs uppercase tracking-[0.25em] text-[#F8BC51]">Spicco &middot; <span class="italic">SPEE-koh</span></span>
+    </div>
     <h1 class="font-headline text-5xl md:text-8xl font-bold tracking-tighter leading-tight mb-8">
       <span class="block">We Build Brands That</span>
       <span class="bronze-text-gradient block">Demand Attention.</span>
@@ -907,18 +911,18 @@ select option {
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div class="relative group">
-            <input name="name" required class="w-full bg-transparent border-b border-outline-variant/40 py-4 px-0 focus:outline-none focus:border-primary transition-colors text-lg placeholder:text-outline/60 text-on-surface" placeholder="Name" type="text"/>
+            <input name="name" required class="w-full bg-transparent border-b border-outline-variant/40 py-4 px-0 focus:outline-none focus:border-primary transition-colors text-lg placeholder:text-[#E9E1DC]/70 text-white" placeholder="Name" type="text"/>
           </div>
           <div class="relative group">
-            <input name="company" class="w-full bg-transparent border-b border-outline-variant/40 py-4 px-0 focus:outline-none focus:border-primary transition-colors text-lg placeholder:text-outline/60 text-on-surface" placeholder="Company" type="text"/>
+            <input name="company" class="w-full bg-transparent border-b border-outline-variant/40 py-4 px-0 focus:outline-none focus:border-primary transition-colors text-lg placeholder:text-[#E9E1DC]/70 text-white" placeholder="Company" type="text"/>
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div class="relative group">
-            <input name="email" required class="w-full bg-transparent border-b border-outline-variant/40 py-4 px-0 focus:outline-none focus:border-primary transition-colors text-lg placeholder:text-outline/60 text-on-surface" placeholder="Email Address" type="email"/>
+            <input name="email" required class="w-full bg-transparent border-b border-outline-variant/40 py-4 px-0 focus:outline-none focus:border-primary transition-colors text-lg placeholder:text-[#E9E1DC]/70 text-white" placeholder="Email Address" type="email"/>
           </div>
           <div class="relative group">
-            <select name="service" class="w-full bg-transparent border-b border-outline-variant/40 py-4 px-0 focus:outline-none focus:border-primary transition-colors text-lg text-outline/60 appearance-none">
+            <select name="service" class="w-full bg-transparent border-b border-outline-variant/40 py-4 px-0 focus:outline-none focus:border-primary transition-colors text-lg text-[#E9E1DC]/70 appearance-none">
               <option value="">Service Needed</option>
               <option value="web">Web Design</option>
               <option value="branding">Branding</option>
@@ -927,7 +931,7 @@ select option {
           </div>
         </div>
         <div class="relative group">
-          <textarea name="message" required class="w-full bg-transparent border-b border-outline-variant/40 py-4 px-0 focus:outline-none focus:border-primary transition-colors text-lg placeholder:text-outline/60 text-on-surface resize-none" placeholder="Your Message" rows="4"></textarea>
+          <textarea name="message" required class="w-full bg-transparent border-b border-outline-variant/40 py-4 px-0 focus:outline-none focus:border-primary transition-colors text-lg placeholder:text-[#E9E1DC]/70 text-white resize-none" placeholder="Your Message" rows="4"></textarea>
         </div>
         <div class="flex justify-center pt-6">
           <button class="bronze-gradient px-16 py-6 font-headline font-bold uppercase tracking-[0.2em] text-on-primary-fixed hover:scale-105 transition-all duration-500 shadow-[0_20px_50px_rgba(200,146,42,0.2)]" type="submit">
@@ -1061,7 +1065,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Current wheel rotation angle (continuous, not snapped)
   let currentAngle = 0;
   let paused = false;
-  let autoSpeed = 0.3; // degrees per frame — brisk but smooth spin
+  let autoSpeed = 0.22; // degrees per frame — smooth elegant spin
 
   // Determine which card index is "front-facing" at a given angle
   function getFrontIndex(angle) {
