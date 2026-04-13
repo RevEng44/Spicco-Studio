@@ -903,7 +903,7 @@ select option {
       <h2 class="font-headline text-4xl md:text-7xl font-bold uppercase">Let's Build Something.</h2>
     </div>
     <div class="bg-[#111]/70 backdrop-blur-md border border-outline-variant/10 rounded-lg p-8 md:p-14 shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
-      <form action="https://formsubmit.co/your@email.com" method="POST" class="space-y-10">
+      <form action="https://formsubmit.co/spiccostudio@gmail.com" method="POST" class="space-y-10">
         <!-- FormSubmit hidden fields -->
         <input type="hidden" name="_captcha" value="false">
         <input type="hidden" name="_next" value="https://spicco.studio/thanks.html">
@@ -1109,7 +1109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Auto-spin loop
   function tick() {
-    if (!paused) {
+    if (!paused && !isSnapping) {
       currentAngle += autoSpeed;
       setWheelAngle(currentAngle);
     }
@@ -1122,25 +1122,31 @@ document.addEventListener('DOMContentLoaded', () => {
   scene.addEventListener('mouseenter', () => { paused = true; });
   scene.addEventListener('mouseleave', () => { paused = false; });
 
-  // Clicking a dot snaps to that card
+  // Clicking a dot snaps to that card with smooth animation
+  let isSnapping = false;
   dots.forEach((dot, i) => {
     dot.addEventListener('click', () => {
-      // Calculate the shortest rotation to reach card i
       const targetAngle = i * angleStep;
       let norm = ((currentAngle % 360) + 360) % 360;
       let diff = targetAngle - norm;
-      // Take the shortest path
       if (diff > 180) diff -= 360;
       if (diff < -180) diff += 360;
-      currentAngle += diff;
-      gsap.to({}, {
-        duration: 0.6,
+      const startAngle = currentAngle;
+      const endAngle = currentAngle + diff;
+      isSnapping = true;
+      gsap.to({ val: 0 }, {
+        val: 1,
+        duration: 0.8,
         ease: 'power2.inOut',
         onUpdate: function() {
+          currentAngle = startAngle + (endAngle - startAngle) * this.targets()[0].val;
           setWheelAngle(currentAngle);
+        },
+        onComplete: function() {
+          currentAngle = endAngle;
+          isSnapping = false;
         }
       });
-      setWheelAngle(currentAngle);
     });
   });
 
