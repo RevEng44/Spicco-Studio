@@ -1087,8 +1087,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentScrollY = window.scrollY;
     const heroBottom = heroSection ? heroSection.offsetHeight - 100 : 300;
 
-    // Solid background after scrolling past hero
-    if (currentScrollY > heroBottom) {
+    // Solid background as soon as user scrolls
+    if (currentScrollY > 20) {
       nav.classList.add('nav-solid');
     } else {
       nav.classList.remove('nav-solid');
