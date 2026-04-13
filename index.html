@@ -100,7 +100,13 @@ nav.nav-hidden {
   transform: translateY(-100%);
 }
 nav {
-  transition: transform 0.4s ease;
+  transition: transform 0.4s ease, background 0.5s ease, box-shadow 0.5s ease, backdrop-filter 0.5s ease;
+}
+nav.nav-solid {
+  background: rgba(13, 10, 8, 0.85) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 20px 50px rgba(13, 10, 8, 0.5);
 }
 
 /* Service card hover lift + bronze glow */
@@ -574,7 +580,7 @@ select option {
 </div>
 
 <!-- ========== NAVBAR ========== -->
-<nav id="mainNav" class="fixed top-0 w-full z-50 bg-[#0D0A08]/80 backdrop-blur-xl shadow-[0_20px_50px_rgba(13,10,8,0.5)]">
+<nav id="mainNav" class="fixed top-0 w-full z-50 transition-all duration-500" style="background: transparent;">
   <div class="flex justify-between items-center w-full px-4 md:px-8 py-4 md:py-6 max-w-none">
     <div class="flex items-center gap-2 md:gap-4">
       <img alt="SPICCO STUDIO" class="h-10 md:h-16 w-auto" src="images/logo.png"/>
@@ -1071,21 +1077,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ===== NAVBAR HIDE/SHOW ON SCROLL =====
+  // ===== NAVBAR — TRANSPARENT OVER HERO, SOLID AFTER =====
   const nav = document.getElementById('mainNav');
+  const heroSection = document.querySelector('section'); // first section = hero
   let lastScrollY = window.scrollY;
   let ticking = false;
+
+  function updateNav() {
+    const currentScrollY = window.scrollY;
+    const heroBottom = heroSection ? heroSection.offsetHeight - 100 : 300;
+
+    // Solid background after scrolling past hero
+    if (currentScrollY > heroBottom) {
+      nav.classList.add('nav-solid');
+    } else {
+      nav.classList.remove('nav-solid');
+    }
+
+    // Hide on scroll down, show on scroll up (only after hero)
+    if (currentScrollY > lastScrollY && currentScrollY > heroBottom) {
+      nav.classList.add('nav-hidden');
+    } else {
+      nav.classList.remove('nav-hidden');
+    }
+
+    lastScrollY = currentScrollY;
+  }
+
+  // Run once on load
+  updateNav();
 
   window.addEventListener('scroll', () => {
     if (!ticking) {
       window.requestAnimationFrame(() => {
-        const currentScrollY = window.scrollY;
-        if (currentScrollY > lastScrollY && currentScrollY > 100) {
-          nav.classList.add('nav-hidden');
-        } else {
-          nav.classList.remove('nav-hidden');
-        }
-        lastScrollY = currentScrollY;
+        updateNav();
         ticking = false;
       });
       ticking = true;
