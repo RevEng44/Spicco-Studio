@@ -1062,98 +1062,81 @@ document.addEventListener('DOMContentLoaded', () => {
     card.style.transform = `translate(-50%, -50%) rotateY(${angle}deg) translateZ(${radius}px)`;
   });
 
-  // Current wheel rotation angle (continuous, not snapped)
+  // State
   let currentAngle = 0;
-  let paused = false;
-  let isSnapping = false;
-  let autoSpeed = 0.22; // degrees per frame — smooth elegant spin
+  let hovered = false;
+  let snapTween = null;
+  const autoSpeed = 0.22;
 
-  // Determine which card index is "front-facing" at a given angle
   function getFrontIndex(angle) {
-    // Normalize to 0-360
     let norm = ((angle % 360) + 360) % 360;
-    // The front card is the one whose position angle is closest to the current rotation
-    // Card i is at angle i*angleStep. It faces front when wheelRotation ≡ i*angleStep (mod 360)
     let best = 0;
     let bestDist = 360;
     for (let i = 0; i < numCards; i++) {
-      let cardAngle = i * angleStep;
-      let dist = Math.abs(((norm - cardAngle + 180) % 360) - 180);
-      if (dist < bestDist) {
-        bestDist = dist;
-        best = i;
-      }
+      let d = Math.abs(((norm - i * angleStep + 180) % 360) - 180);
+      if (d < bestDist) { bestDist = d; best = i; }
     }
     return best;
   }
 
-  function updateVisuals() {
+  function render() {
+    gsap.set(wheel, { rotateY: -currentAngle });
     const frontIdx = getFrontIndex(currentAngle);
     cards.forEach((c, i) => {
-      if (i === frontIdx) {
-        c.style.filter = 'brightness(1) blur(0px)';
-        c.style.opacity = '1';
-      } else {
-        c.style.filter = 'brightness(0.35) blur(3px)';
-        c.style.opacity = '0.55';
-      }
+      c.style.filter = i === frontIdx ? 'brightness(1) blur(0px)' : 'brightness(0.35) blur(3px)';
+      c.style.opacity = i === frontIdx ? '1' : '0.55';
     });
-    dots.forEach((d, i) => {
-      d.classList.toggle('active', i === frontIdx);
-    });
+    dots.forEach((d, i) => d.classList.toggle('active', i === frontIdx));
   }
 
-  function setWheelAngle(angle) {
-    gsap.set(wheel, { rotateY: -angle });
-    updateVisuals();
-  }
-
-  // Auto-spin loop — snapping takes priority and drives its own updates
+  // Auto-spin: only when not hovered and no snap in progress
   function tick() {
-    if (!isSnapping && !paused) {
+    if (!hovered && !snapTween) {
       currentAngle += autoSpeed;
-      setWheelAngle(currentAngle);
+      render();
     }
     requestAnimationFrame(tick);
   }
-  setWheelAngle(0);
+  render();
   requestAnimationFrame(tick);
 
-  // Pause on hover — but only over the cards, not the dots
-  scene.addEventListener('mouseenter', () => { if (!isSnapping) paused = true; });
-  scene.addEventListener('mouseleave', () => { paused = false; });
+  // Hover: pause auto-spin over the 3D scene (cards area)
+  scene.addEventListener('mouseenter', () => { hovered = true; });
+  scene.addEventListener('mouseleave', () => { hovered = false; });
 
-  // Clicking a dot snaps to that card with smooth animation
-  dots.forEach((dot, i) => {
-    dot.addEventListener('click', () => {
-      const targetAngle = i * angleStep;
-      let norm = ((currentAngle % 360) + 360) % 360;
-      let diff = targetAngle - norm;
-      if (diff > 180) diff -= 360;
-      if (diff < -180) diff += 360;
-      if (Math.abs(diff) < 1) return;
+  // Dot click: kill any running snap, then animate to the target card
+  function snapToCard(i) {
+    // Kill previous snap if still running
+    if (snapTween) { snapTween.kill(); snapTween = null; }
 
-      const startAngle = currentAngle;
-      const endAngle = currentAngle + diff;
-      isSnapping = true;
+    const targetAngle = i * angleStep;
+    let norm = ((currentAngle % 360) + 360) % 360;
+    let diff = targetAngle - norm;
+    if (diff > 180) diff -= 360;
+    if (diff < -180) diff += 360;
+    if (Math.abs(diff) < 0.5) return;
 
-      gsap.fromTo({ progress: 0 }, { progress: 1 }, {
-        duration: 0.8,
-        ease: 'power2.inOut',
-        onUpdate: function() {
-          const p = this.targets()[0].progress;
-          currentAngle = startAngle + diff * p;
-          setWheelAngle(currentAngle);
-        },
-        onComplete: function() {
-          currentAngle = endAngle;
-          setWheelAngle(currentAngle);
-          isSnapping = false;
-          // Stay paused since mouse is likely still over the area
-          paused = true;
-        }
-      });
+    const start = currentAngle;
+    const end = currentAngle + diff;
+
+    snapTween = gsap.to({ p: 0 }, {
+      p: 1,
+      duration: 0.8,
+      ease: 'power2.inOut',
+      onUpdate: function() {
+        currentAngle = start + diff * this.targets()[0].p;
+        render();
+      },
+      onComplete: function() {
+        currentAngle = end;
+        render();
+        snapTween = null;
+      }
     });
+  }
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => snapToCard(i));
   });
 
 });
