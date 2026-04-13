@@ -1065,6 +1065,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Current wheel rotation angle (continuous, not snapped)
   let currentAngle = 0;
   let paused = false;
+  let isSnapping = false;
   let autoSpeed = 0.22; // degrees per frame — smooth elegant spin
 
   // Determine which card index is "front-facing" at a given angle
@@ -1107,9 +1108,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateVisuals();
   }
 
-  // Auto-spin loop
+  // Auto-spin loop — snapping takes priority and drives its own updates
   function tick() {
-    if (!paused && !isSnapping) {
+    if (!isSnapping && !paused) {
       currentAngle += autoSpeed;
       setWheelAngle(currentAngle);
     }
@@ -1123,17 +1124,19 @@ document.addEventListener('DOMContentLoaded', () => {
   scene.addEventListener('mouseleave', () => { paused = false; });
 
   // Clicking a dot snaps to that card with smooth animation
-  let isSnapping = false;
   dots.forEach((dot, i) => {
-    dot.addEventListener('click', () => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation(); // Don't let hover logic interfere
       const targetAngle = i * angleStep;
       let norm = ((currentAngle % 360) + 360) % 360;
       let diff = targetAngle - norm;
       if (diff > 180) diff -= 360;
       if (diff < -180) diff += 360;
+      if (Math.abs(diff) < 1) return; // Already on this card
       const startAngle = currentAngle;
       const endAngle = currentAngle + diff;
       isSnapping = true;
+      paused = false; // Override hover pause during snap
       gsap.to({ val: 0 }, {
         val: 1,
         duration: 0.8,
