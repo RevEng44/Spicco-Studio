@@ -299,22 +299,53 @@ nav {
     display: none !important;
   }
   .mobile-card-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-    padding: 0 1rem 3rem;
+    display: block;
+    padding: 0 0 2rem;
+    overflow: hidden;
   }
-  .mobile-card-stack .browser-frame {
+  .mobile-swipe-track {
+    display: flex;
+    gap: 1rem;
+    padding: 0 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .mobile-swipe-track::-webkit-scrollbar { display: none; }
+  .mobile-swipe-card {
+    flex: 0 0 85%;
+    scroll-snap-align: center;
+  }
+  .mobile-swipe-card .browser-frame {
     width: 100%;
   }
-  .mobile-card-stack .browser-content {
+  .mobile-swipe-card .browser-content {
     width: 100%;
     height: auto;
     aspect-ratio: 16/10;
   }
-  .mobile-card-stack .view-site-overlay {
+  .mobile-swipe-card .view-site-overlay {
     opacity: 1;
     pointer-events: auto;
+  }
+  /* Mobile dots */
+  .mobile-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 1.25rem;
+  }
+  .mobile-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(200, 146, 42, 0.2);
+    transition: all 0.3s ease;
+  }
+  .mobile-dot.active {
+    background: #C8922A;
+    box-shadow: 0 0 10px rgba(200, 146, 42, 0.5);
   }
 }
 
@@ -544,10 +575,10 @@ select option {
 
 <!-- ========== NAVBAR ========== -->
 <nav id="mainNav" class="fixed top-0 w-full z-50 bg-[#0D0A08]/80 backdrop-blur-xl shadow-[0_20px_50px_rgba(13,10,8,0.5)]">
-  <div class="flex justify-between items-center w-full px-8 py-6 max-w-none">
-    <div class="flex items-center gap-4">
-      <img alt="SPICCO STUDIO" class="h-16 w-auto" src="images/logo.png"/>
-      <span class="text-3xl font-extrabold tracking-wide text-[#E9E1DC]" style="font-family:'Saira Extra Condensed',sans-serif;">SPICCO STUDIO</span>
+  <div class="flex justify-between items-center w-full px-4 md:px-8 py-4 md:py-6 max-w-none">
+    <div class="flex items-center gap-2 md:gap-4">
+      <img alt="SPICCO STUDIO" class="h-10 md:h-16 w-auto" src="images/logo.png"/>
+      <span class="text-xl md:text-3xl font-extrabold tracking-wide text-[#E9E1DC]" style="font-family:'Saira Extra Condensed',sans-serif;">SPICCO STUDIO</span>
     </div>
     <div class="hidden md:flex items-center gap-10">
       <a class="font-headline uppercase tracking-[0.15em] text-sm font-bold text-[#E9E1DC] hover:text-[#F8BC51] transition-colors duration-300" href="#services">Services</a>
@@ -555,9 +586,26 @@ select option {
       <a class="font-headline uppercase tracking-[0.15em] text-sm font-bold text-[#E9E1DC] hover:text-[#F8BC51] transition-colors duration-300" href="#about">About</a>
       <a class="font-headline uppercase tracking-[0.15em] text-sm font-bold text-[#E9E1DC] hover:text-[#F8BC51] transition-colors duration-300" href="#contact">Contact</a>
     </div>
-    <a href="#contact" class="bronze-gradient font-headline uppercase tracking-[0.15em] text-xs font-bold px-8 py-3 rounded-none text-on-primary-fixed hover:opacity-80 transition-all duration-500 no-underline">
-      START PROJECT
-    </a>
+    <div class="flex items-center gap-3">
+      <a href="#contact" class="bronze-gradient font-headline uppercase tracking-[0.15em] text-[10px] md:text-xs font-bold px-4 md:px-8 py-2 md:py-3 rounded-none text-on-primary-fixed hover:opacity-80 transition-all duration-500 no-underline whitespace-nowrap">
+        START PROJECT
+      </a>
+      <!-- Mobile hamburger -->
+      <button id="mobileMenuBtn" class="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-1.5" aria-label="Menu">
+        <span class="block w-6 h-0.5 bg-[#E9E1DC] transition-all duration-300" id="burger1"></span>
+        <span class="block w-6 h-0.5 bg-[#E9E1DC] transition-all duration-300" id="burger2"></span>
+        <span class="block w-6 h-0.5 bg-[#E9E1DC] transition-all duration-300" id="burger3"></span>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile dropdown menu -->
+  <div id="mobileMenu" class="hidden md:hidden bg-[#0D0A08]/95 backdrop-blur-xl border-t border-outline-variant/10">
+    <div class="flex flex-col items-center py-6 gap-6">
+      <a class="font-headline uppercase tracking-[0.15em] text-sm font-bold text-[#E9E1DC] hover:text-[#F8BC51] transition-colors duration-300" href="#services" onclick="closeMobileMenu()">Services</a>
+      <a class="font-headline uppercase tracking-[0.15em] text-sm font-bold text-[#E9E1DC] hover:text-[#F8BC51] transition-colors duration-300" href="#portfolio" onclick="closeMobileMenu()">Portfolio</a>
+      <a class="font-headline uppercase tracking-[0.15em] text-sm font-bold text-[#E9E1DC] hover:text-[#F8BC51] transition-colors duration-300" href="#about" onclick="closeMobileMenu()">About</a>
+      <a class="font-headline uppercase tracking-[0.15em] text-sm font-bold text-[#E9E1DC] hover:text-[#F8BC51] transition-colors duration-300" href="#contact" onclick="closeMobileMenu()">Contact</a>
+    </div>
   </div>
 </nav>
 
@@ -773,47 +821,55 @@ select option {
     </div>
   </div>
 
-  <!-- Mobile: Vertical card stack -->
-  <div class="mobile-card-stack">
-    <div class="flex flex-col items-center">
-      <div class="browser-frame">
-        <div class="browser-chrome"><div class="browser-dot red"></div><div class="browser-dot yellow"></div><div class="browser-dot green"></div><span class="browser-url">thebakingbroker.ca</span></div>
-        <div class="browser-content">
-          <img src="images/portfolio-thebakingbroker.png" alt="The Baking Broker website"/>
-          <div class="view-site-overlay" style="opacity:1;pointer-events:auto;"><a href="https://thebakingbroker.ca" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a></div>
+  <!-- Mobile: Swipeable card carousel -->
+  <div class="mobile-card-stack" id="mobileCarousel">
+    <div class="mobile-swipe-track" id="mobileSwipeTrack">
+      <div class="mobile-swipe-card">
+        <div class="browser-frame">
+          <div class="browser-chrome"><div class="browser-dot red"></div><div class="browser-dot yellow"></div><div class="browser-dot green"></div><span class="browser-url">thebakingbroker.ca</span></div>
+          <div class="browser-content">
+            <img src="images/portfolio-thebakingbroker.png" alt="The Baking Broker website"/>
+            <div class="view-site-overlay" style="opacity:1;pointer-events:auto;"><a href="https://thebakingbroker.ca" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a></div>
+          </div>
         </div>
+        <div class="card-info mt-4"><h4>The Baking Broker</h4><p>Mortgage Broker</p></div>
       </div>
-      <div class="card-info mt-4"><h4>The Baking Broker</h4><p>Mortgage Broker</p></div>
+      <div class="mobile-swipe-card">
+        <div class="browser-frame">
+          <div class="browser-chrome"><div class="browser-dot red"></div><div class="browser-dot yellow"></div><div class="browser-dot green"></div><span class="browser-url">spiritvalley.ca</span></div>
+          <div class="browser-content">
+            <img src="images/portfolio-spiritvalley.png" alt="Spirit Valley website"/>
+            <div class="view-site-overlay" style="opacity:1;pointer-events:auto;"><a href="https://spiritvalley.ca" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a></div>
+          </div>
+        </div>
+        <div class="card-info mt-4"><h4>Spirit Valley</h4><p>Indigenous Business</p></div>
+      </div>
+      <div class="mobile-swipe-card">
+        <div class="browser-frame">
+          <div class="browser-chrome"><div class="browser-dot red"></div><div class="browser-dot yellow"></div><div class="browser-dot green"></div><span class="browser-url">defenderdr.com</span></div>
+          <div class="browser-content">
+            <img src="images/portfolio-defenderdr.png" alt="Defender Construction Products website"/>
+            <div class="view-site-overlay" style="opacity:1;pointer-events:auto;"><a href="https://defenderdr.com" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a></div>
+          </div>
+        </div>
+        <div class="card-info mt-4"><h4>Defender Construction Products</h4><p>Construction Products</p></div>
+      </div>
+      <div class="mobile-swipe-card">
+        <div class="browser-frame">
+          <div class="browser-chrome"><div class="browser-dot red"></div><div class="browser-dot yellow"></div><div class="browser-dot green"></div><span class="browser-url">neosadvisors.ca</span></div>
+          <div class="browser-content">
+            <img src="images/portfolio-neosadvisors.png" alt="Neos Advisors website"/>
+            <div class="view-site-overlay" style="opacity:1;pointer-events:auto;"><a href="https://neosadvisors.ca" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a></div>
+          </div>
+        </div>
+        <div class="card-info mt-4"><h4>Neos Advisors</h4><p>Construction Advisory</p></div>
+      </div>
     </div>
-    <div class="flex flex-col items-center">
-      <div class="browser-frame">
-        <div class="browser-chrome"><div class="browser-dot red"></div><div class="browser-dot yellow"></div><div class="browser-dot green"></div><span class="browser-url">spiritvalley.ca</span></div>
-        <div class="browser-content">
-          <img src="images/portfolio-spiritvalley.png" alt="Spirit Valley website"/>
-          <div class="view-site-overlay" style="opacity:1;pointer-events:auto;"><a href="https://spiritvalley.ca" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a></div>
-        </div>
-      </div>
-      <div class="card-info mt-4"><h4>Spirit Valley</h4><p>Indigenous Business</p></div>
-    </div>
-    <div class="flex flex-col items-center">
-      <div class="browser-frame">
-        <div class="browser-chrome"><div class="browser-dot red"></div><div class="browser-dot yellow"></div><div class="browser-dot green"></div><span class="browser-url">defenderdr.com</span></div>
-        <div class="browser-content">
-          <img src="images/portfolio-defenderdr.png" alt="Defender Construction Products website"/>
-          <div class="view-site-overlay" style="opacity:1;pointer-events:auto;"><a href="https://defenderdr.com" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a></div>
-        </div>
-      </div>
-      <div class="card-info mt-4"><h4>Defender Construction Products</h4><p>Construction Products</p></div>
-    </div>
-    <div class="flex flex-col items-center">
-      <div class="browser-frame">
-        <div class="browser-chrome"><div class="browser-dot red"></div><div class="browser-dot yellow"></div><div class="browser-dot green"></div><span class="browser-url">neosadvisors.ca</span></div>
-        <div class="browser-content">
-          <img src="images/portfolio-neosadvisors.png" alt="Neos Advisors website"/>
-          <div class="view-site-overlay" style="opacity:1;pointer-events:auto;"><a href="https://neosadvisors.ca" target="_blank" rel="noopener" class="view-site-btn">View Site &rarr;</a></div>
-        </div>
-      </div>
-      <div class="card-info mt-4"><h4>Neos Advisors</h4><p>Construction Advisory</p></div>
+    <div class="mobile-dots" id="mobileDots">
+      <div class="mobile-dot active"></div>
+      <div class="mobile-dot"></div>
+      <div class="mobile-dot"></div>
+      <div class="mobile-dot"></div>
     </div>
   </div>
 </section>
@@ -967,7 +1023,51 @@ select option {
 
 <!-- ========== JAVASCRIPT ========== -->
 <script>
+// Mobile menu toggle (needs to be global for onclick handlers)
+function closeMobileMenu() {
+  document.getElementById('mobileMenu').classList.add('hidden');
+  document.getElementById('burger1').style.transform = '';
+  document.getElementById('burger2').style.opacity = '';
+  document.getElementById('burger3').style.transform = '';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+
+  // ===== MOBILE HAMBURGER MENU =====
+  const menuBtn = document.getElementById('mobileMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  if (menuBtn && mobileMenu) {
+    menuBtn.addEventListener('click', () => {
+      const isOpen = !mobileMenu.classList.contains('hidden');
+      if (isOpen) {
+        closeMobileMenu();
+      } else {
+        mobileMenu.classList.remove('hidden');
+        // Animate to X
+        document.getElementById('burger1').style.transform = 'rotate(45deg) translate(4px, 4px)';
+        document.getElementById('burger2').style.opacity = '0';
+        document.getElementById('burger3').style.transform = 'rotate(-45deg) translate(4px, -4px)';
+      }
+    });
+  }
+
+  // ===== MOBILE CAROUSEL DOTS =====
+  const mobileTrack = document.getElementById('mobileSwipeTrack');
+  const mobileDots = document.querySelectorAll('#mobileDots .mobile-dot');
+  if (mobileTrack && mobileDots.length) {
+    mobileTrack.addEventListener('scroll', () => {
+      const cardWidth = mobileTrack.querySelector('.mobile-swipe-card').offsetWidth + 16; // gap
+      const idx = Math.round(mobileTrack.scrollLeft / cardWidth);
+      mobileDots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    });
+    // Tap dot to scroll to card
+    mobileDots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        const cardWidth = mobileTrack.querySelector('.mobile-swipe-card').offsetWidth + 16;
+        mobileTrack.scrollTo({ left: i * cardWidth, behavior: 'smooth' });
+      });
+    });
+  }
 
   // ===== NAVBAR HIDE/SHOW ON SCROLL =====
   const nav = document.getElementById('mainNav');
