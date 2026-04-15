@@ -657,6 +657,7 @@ select option {
     <div class="text-center mb-24">
       <span class="font-headline text-primary text-sm uppercase tracking-[0.2em] font-bold mb-4 block">Capabilities</span>
       <h2 class="font-headline text-4xl md:text-6xl font-bold uppercase">What We Build</h2>
+      <p class="text-on-surface-variant text-lg mt-6 max-w-2xl mx-auto font-light">A powerful brand and a commanding online presence aren't optional — they're the foundation of growth. We know what it takes to get your business noticed.</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
       <!-- Service Card 1 -->
@@ -1094,12 +1095,7 @@ document.addEventListener('DOMContentLoaded', () => {
       nav.classList.remove('nav-solid');
     }
 
-    // Hide on scroll down, show on scroll up (only after hero)
-    if (currentScrollY > lastScrollY && currentScrollY > heroBottom) {
-      nav.classList.add('nav-hidden');
-    } else {
-      nav.classList.remove('nav-hidden');
-    }
+    // Navbar always visible — no hide on scroll
 
     lastScrollY = currentScrollY;
   }
